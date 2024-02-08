@@ -1,4 +1,5 @@
-from operator import attrgetter
+from collections import namedtuple
+Node = namedtuple("Node", ['value', 'room', 'estimate', index])
 
 # Run greedy algorithm 
 def greedy(items, capacity):  
@@ -128,6 +129,29 @@ def min_max(items):
   return (min_weight, max_weight, max_weight*len(items))
         
 
+# Branch and bound
+def bnb(items, capacity):
+  root = Node(0,capacity,best_estimate(items), -1)
+
+
+  queue = [root]
+
+
+  while len(queue) > 0:
+    current_node = queue.pop()    
+    idx = 1  
+    selected = Node(current_node.value+item.value, current_node.capacity-item.weight, best_estimate(items[idx:]) )
+  
+  
+     
+     
+     
+  
+
+def best_estimate(items, capacity):
+   return sum(i.value for i in items)
+
+   
 
 
 
