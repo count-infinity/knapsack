@@ -40,10 +40,23 @@ def solve_it(input_data):
         items.append(Item(i-1, int(parts[0]), int(parts[1])))
 
 
-    value, taken=knapsack.greedy(items, capacity)
+    
+
+
+    min,max,total = knapsack.min_max(items)
+
+    value = 0
+    taken = []
+    optimal = 0
+
+    if total > 50000000:
+        value, taken, optimal=knapsack.greedy(items, capacity)
+    else:
+        value, taken, optimal=knapsack.dynamic(items, capacity)
+
     
     # prepare the solution in the specified output format
-    output_data = str(value) + ' ' + str(0) + '\n'
+    output_data = str(value) + ' ' + str(optimal) + '\n'
     output_data += ' '.join(map(str, taken))
     return output_data
 
