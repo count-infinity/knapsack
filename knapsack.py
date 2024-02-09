@@ -1,5 +1,5 @@
 from collections import namedtuple
-Node = namedtuple("Node", ['value', 'room', 'estimate', index])
+Node = namedtuple("Node", ['value', 'capacity', 'estimate', 'index', 'take','path'])
 
 # Run greedy algorithm 
 def greedy(items, capacity):  
@@ -131,24 +131,42 @@ def min_max(items):
 
 # Branch and bound
 def bnb(items, capacity):
-  root = Node(0,capacity,best_estimate(items), -1)
+  root = Node(0,capacity,best_estimate(items), -1,-1,[])
 
 
   queue = [root]
 
+  best_node = None
+  best_value = 0
+
 
   while len(queue) > 0:
-    current_node = queue.pop()    
-    idx = 1  
-    selected = Node(current_node.value+item.value, current_node.capacity-item.weight, best_estimate(items[idx:]) )
-  
-  
-     
-     
-     
-  
+    current_node = queue.pop()
+    child_index = current_node.index+1
 
-def best_estimate(items, capacity):
+    if current_node.value > best_value:
+      best_value = current_node.value
+      best_node = current_node
+    
+    if child_index == len(items):            
+      continue 
+       
+    item = items[child_index]
+    
+    selected = Node(current_node.value+item.value, current_node.capacity-item.weight, current_node.estimate,child_index,1,current_node.path+[1])           
+    not_selected = Node(current_node.value, current_node.capacity, best_estimate(items[child_index+1:]),child_index,0,current_node.path+[0])
+
+    if not_selected.estimate > best_value:
+      queue.append(not_selected)    
+    
+    if selected.capacity >= 0:
+      queue.append(selected)
+  
+  return (best_node.value,best_node.path,1)
+    
+      
+
+def best_estimate(items):
    return sum(i.value for i in items)
 
    
