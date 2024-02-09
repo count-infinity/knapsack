@@ -141,7 +141,7 @@ def bnb(items, capacity):
 
 
   while len(queue) > 0:
-    current_node = queue.pop()
+    current_node = queue.pop()    
     child_index = current_node.index+1
 
     if current_node.value > best_value:
@@ -159,7 +159,7 @@ def bnb(items, capacity):
     if not_selected.estimate > best_value:
       queue.append(not_selected)    
     
-    if selected.capacity >= 0:
+    if selected.capacity >= 0 and selected.estimate > best_value:
       queue.append(selected)
   
   return (best_node.value,best_node.path,1)
