@@ -145,12 +145,15 @@ def bnb(items, capacity):
   sorted_items=sorted(items, key=lambda item: item.value/item.weight, reverse=True)
 
   root = Node(0,capacity,best_estimate(sorted_items, capacity), -1,-1,[])
+  print(f"Root best estimate: {root.estimate}")
 
 
   queue = [root]
 
   best_node = None
   best_value = 0
+
+  bvs = 0
 
 
   while len(queue) > 0:
@@ -167,34 +170,41 @@ def bnb(items, capacity):
     item = sorted_items[child_index]
     
     selected = Node(current_node.value+item.value, current_node.capacity-item.weight, current_node.estimate,child_index,1,current_node.path+[1])           
-    not_selected = Node(current_node.value, current_node.capacity, best_estimate(sorted_items[child_index+1:], current_node.capacity),child_index,0,current_node.path+[0])
+    not_selected = Node(current_node.value, current_node.capacity, current_node.value+best_estimate(sorted_items[child_index+1:], current_node.capacity),child_index,0,current_node.path+[0])
 
-    if not_selected.estimate > best_value:
+    
+
+    if not_selected.estimate >= best_value:
       queue.append(not_selected)    
     
-    if selected.capacity >= 0 and selected.estimate > best_value:
+    if selected.capacity >= 0: #and selected.estimate >= best_value:
+      if selected.value > bvs: bvs=selected.value
       queue.append(selected)
 
 
   best_path=reorder(sorted_items,best_node.path)
-  
+  print(f"BVS {bvs}")
   return (best_node.value,best_path,1)
     
       
 
 def best_estimate(items, capacity_left):
 
+  print(f"\nCapacity left: {capacity_left}")
+  print([str(i.weight)+":"+str(i.value) for i in items])
+
   estimate = 0
   for item in items:    
     capacity_left -= item.weight
     if capacity_left >= 0:
       estimate += item.value
-    else:
+    else:      
       difference = abs(capacity_left)
       fraction = difference/item.weight
       estimate += fraction*item.value
+      print(f"Difference {difference}, fraction {fraction}, est {estimate}")
       break
-  
+  #print(f"Estimate: {estimate}")
   return estimate
 
 
