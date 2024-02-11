@@ -143,7 +143,7 @@ def bnb(items, capacity):
   # Take highest ratio first
   sorted_items=sorted(items, key=lambda item: item.value/item.weight, reverse=True)
 
-  root = Node(0,capacity,best_estimate(sorted_items, capacity, capacity), -1,-1,[])
+  root = Node(0,capacity,best_estimate(sorted_items, capacity), -1,-1,[])
 
 
   queue = [root]
@@ -166,7 +166,7 @@ def bnb(items, capacity):
     item = sorted_items[child_index]
     
     selected = Node(current_node.value+item.value, current_node.capacity-item.weight, current_node.estimate,child_index,1,current_node.path+[1])           
-    not_selected = Node(current_node.value, current_node.capacity, best_estimate(sorted_items[child_index+1:], current_node.capacity, capacity),child_index,0,current_node.path+[0])
+    not_selected = Node(current_node.value, current_node.capacity, best_estimate(sorted_items[child_index+1:], current_node.capacity),child_index,0,current_node.path+[0])
 
     if not_selected.estimate > best_value:
       queue.append(not_selected)    
@@ -181,7 +181,7 @@ def bnb(items, capacity):
     
       
 
-def best_estimate(items, capacity_left, total_capacity):
+def best_estimate(items, capacity_left):
 
   estimate = 0
   for item in items:    
