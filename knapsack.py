@@ -22,7 +22,7 @@ def greedy(items, capacity):
       value = weight_value
       taken = weight_taken
 
-  # Take lowest weight first
+  # Take lowest ratio first
   sorted_items=sorted(enumerate(items), key=lambda item: item[1].value/item[1].weight, reverse=True)
   ratio_value, ratio_taken = take_until_cap(sorted_items, capacity)
 
@@ -127,11 +127,23 @@ def min_max(items):
       max_weight = item.weight
   
   return (min_weight, max_weight, max_weight*len(items))
-        
+
+
+def reorder(sorted_items, path):
+
+  new_path=[0]*len(sorted_items)
+  for idx, take in enumerate(path):    
+      new_path[sorted_items[idx].index]=take
+  
+  return new_path
+
 
 # Branch and bound
 def bnb(items, capacity):
-  root = Node(0,capacity,best_estimate(items), -1,-1,[])
+  # Take highest ratio first
+  sorted_items=sorted(items, key=lambda item: item.value/item.weight, reverse=True)
+
+  root = Node(0,capacity,best_estimate(sorted_items, capacity, capacity), -1,-1,[])
 
 
   queue = [root]
@@ -148,26 +160,46 @@ def bnb(items, capacity):
       best_value = current_node.value
       best_node = current_node
     
-    if child_index == len(items):            
+    if child_index == len(sorted_items):            
       continue 
        
-    item = items[child_index]
+    item = sorted_items[child_index]
     
     selected = Node(current_node.value+item.value, current_node.capacity-item.weight, current_node.estimate,child_index,1,current_node.path+[1])           
-    not_selected = Node(current_node.value, current_node.capacity, best_estimate(items[child_index+1:]),child_index,0,current_node.path+[0])
+    not_selected = Node(current_node.value, current_node.capacity, best_estimate(sorted_items[child_index+1:], current_node.capacity, capacity),child_index,0,current_node.path+[0])
 
     if not_selected.estimate > best_value:
       queue.append(not_selected)    
     
     if selected.capacity >= 0 and selected.estimate > best_value:
       queue.append(selected)
+
+
+  best_path=reorder(sorted_items,best_node.path)
   
-  return (best_node.value,best_node.path,1)
+  return (best_node.value,best_path,1)
     
       
 
-def best_estimate(items):
-   return sum(i.value for i in items)
+def best_estimate(items, capacity_left, total_capacity):
+
+  estimate = 0
+  for item in items:    
+    capacity_left -= item.weight
+    if capacity_left >= 0:
+      estimate += item.value
+    else:
+      difference = abs(capacity_left)
+      fraction = difference/item.weight
+      estimate += fraction*item.value
+      break
+  
+  return estimate
+
+
+   
+
+   
 
    
 

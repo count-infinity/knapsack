@@ -49,13 +49,13 @@ def solve_it(input_data):
     taken = []
     optimal = 0
 
-    if total > 50000000:
-        value, taken, optimal=knapsack.greedy(items, capacity)
-    else:
-        value, taken, optimal=knapsack.dynamic(items, capacity)
+    #if total > 50000000:
+    #    value, taken, optimal=knapsack.greedy(items, capacity)
+    #else:
+    #    value, taken, optimal=knapsack.dynamic(items, capacity)
 
-        # Havin some issues on ks_50_0
-        #value, taken, optimal=knapsack.bnb(items, capacity)
+    #Havin some issues on ks_50_0
+    value, taken, optimal=knapsack.bnb(items, capacity)
 
     
     # prepare the solution in the specified output format
