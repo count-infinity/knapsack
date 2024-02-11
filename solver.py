@@ -52,7 +52,9 @@ def solve_it(input_data):
     #if total > 50000000:
     #    value, taken, optimal=knapsack.greedy(items, capacity)
     #else:
-    #    value, taken, optimal=knapsack.dynamic(items, capacity)
+    value, taken, optimal=knapsack.dynamic(items, capacity)
+
+    print(f"DP: {value}\n{' '.join(map(str,taken))}")
 
     #Havin some issues on ks_50_0
     value, taken, optimal=knapsack.bnb(items, capacity)

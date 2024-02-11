@@ -54,10 +54,10 @@ def take_until_cap(items, capacity):
 
 def dynamic(items, capacity):
   dtable=[[0 for i in range(len(items))] for j in range(capacity+1)] 
+  print(len(dtable[0]))
+  print(len(dtable))
 
-  for idx, item in enumerate(items):
-    # Too heavy to ever take
-    if item.weight > capacity: continue
+  for idx, item in enumerate(items):    
 
     for weight in range(capacity+1):
 
@@ -82,6 +82,7 @@ def dynamic(items, capacity):
 
       best_value_if_chosen = prev_best_value_without_weight + item.value
 
+      #print(dtable)
       dtable[weight][idx] = max(prev_best_value, best_value_if_chosen)  
 
   value, selection = determine_picked(dtable, items)
